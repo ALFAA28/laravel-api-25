@@ -25,6 +25,48 @@ class ProductCategoryController extends Controller
 
         return response()->json($productCategory, 201);
     }
+
+    public function show($id)
+{
+    $productCategory = ProductCategory::find($id);
+
+    if (!$productCategory) {
+        return response()->json(['message' => 'Product category not found'], 404);
+    }
+
+    return response()->json($productCategory);
+}
+
+public function update(Request $request, $id)
+{
+    $productCategory = ProductCategory::find($id);
+
+    if (!$productCategory) {
+        return response()->json(['message' => 'Product category not found'], 404);
+    }
+
+    $validatedData = $request->validate([
+        'name' => 'required|max:255',
+        'description' => 'required',
+    ]);
+
+    $productCategory->update($validatedData);
+
+    return response()->json($productCategory);
+}
+
+public function destroy($id)
+{
+    $productCategory = ProductCategory::find($id);
+
+    if (!$productCategory) {
+        return response()->json(['message' => 'Product category not found'], 404);
+    }
+
+    $productCategory->delete();
+
+    return response()->json(['message' => 'Product category deleted successfully']);
+}
 }
 
 
