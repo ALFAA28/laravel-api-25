@@ -18,6 +18,6 @@ Route::prefix('v1')->group(function () {
     
     Route::resource('vendors', VendorController::class);
     Route::resource('products', ProductController::class);
-    Route::resource('categories', ProductCategoryController::class);
-    Route::resource('variants', ProductVariantController::class);
+    Route::resource('product-categories', ProductCategoryController::class);
+    Route::resource('product-variants', ProductVariantController::class);
 });
