@@ -18,8 +18,7 @@ class AuthorFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'birthdate' => $this->faker->date('Y-m-d', '2000-01-01'),
-
+            'birthdate' => $this->faker->date('Y-m-d', '2005-12-31')
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Author;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,13 +17,13 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'title' => $this->faker->catchPhrase(3),
-            'published_year' => $this->faker->year(),
-            'genre' => $this->faker->randomElement(['Fiksi', 'Non-Fiksi', 'Romance', 'Misteri', 'Fantasi', 'Sci-Fi', 'Biografi', 'Sejarah', 'Sains', 'Teknologi']),
-            'author_id' => \App\Models\Author::factory(),
-            // default jika tidak override
+        $authorId = Author::inRandomOrder()->value('id');
 
+        return [
+            'title' => $this->faker->sentence(3),
+            'author' => $this->faker->name(),
+            'author_id' => $authorId,
+            'published_year' => $this->faker->year(),
         ];
     }
 }
