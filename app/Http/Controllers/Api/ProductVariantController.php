@@ -15,13 +15,12 @@ class ProductVariantController extends Controller
     public function index()
     {
         try {
-            $variant = ProductVariant::with(['products', 'categories'])->get();
+            $variant = ProductVariant::with('product')->get();
 
             return response()->json([
                 'message' => 'Varian produk berhasil ditampilkan !!!',
-                'data' => $variant 
+                'data' => $variant
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menampilkan varian produk !!!',
@@ -39,11 +38,10 @@ class ProductVariantController extends Controller
             return response()->json([
                 'message' => 'Route Create Siap Digunakan !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi Kesalahan pada create: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -55,19 +53,17 @@ class ProductVariantController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'product_category_id' => 'required|exists:product_categories,id',
                 'product_id' => 'required|exists:products,id',
-                'name' => 'required|string|unique:product_variants,name',
-                'price' => 'required|numeric|min:0',
-                'stock' => 'required|integer|min:0'
+                'nama' => 'required|string',
+                'stok' => 'required|integer|min:0',
+                'tambahan_harga' => 'nullable|numeric|min:0'
             ]);
 
             $variant = ProductVariant::create($validatedData);
             return response()->json([
-                'messsge' => 'Varian produk berhasil ditambahkan !!!',
+                'message' => 'Varian produk berhasil ditambahkan !!!',
                 'data' => $variant
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menambahkan varian produk !!!',
@@ -82,19 +78,12 @@ class ProductVariantController extends Controller
     public function show(string $id)
     {
         try {
-            $variant = ProductVariant::with(['products', 'categories'])->findOrFail($id);
-
-            if(!$variant) {
-                return response()->json([
-                    'message' => 'Varian produk belum dibuat !!!'
-                ], 404);
-            }
+            $variant = ProductVariant::with('product')->findOrFail($id);
 
             return response()->json([
                 'message' => 'Varian produk pilihan berhasil ditampilkan',
                 'data' => $variant
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menampilkan varian produk !!!',
@@ -109,23 +98,16 @@ class ProductVariantController extends Controller
     public function edit(string $id)
     {
         try {
-            $variant = ProductVariant::findOrFail($id);
-
-            if(!$variant) {
-                return response()->json([
-                    'message' => 'Varian produk tidak ditemukan !!!'
-                ], 404);
-            }
+            $variant = ProductVariant::with('product')->findOrFail($id);
 
             return response()->json([
                 'message' => 'Route edit siap digunakan !!!',
                 'data' => $variant
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan pada edit: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -138,18 +120,11 @@ class ProductVariantController extends Controller
         try {
             $variant = ProductVariant::findOrFail($id);
 
-            if(!$variant) {
-                return response()->json([
-                    'message' => 'Varian produk tidak ada !!!'
-                ], 404);
-            }
-
             $validatedData = $request->validate([
-                'product_category_id' => 'exists:product_categories,id',
                 'product_id' => 'exists:products,id',
-                'name' => 'string|unique:product_variants,name',
-                'price' => 'numeric|min:0',
-                'stock' => 'integer|min:0'
+                'nama' => 'string',
+                'stok' => 'integer|min:0',
+                'tambahan_harga' => 'nullable|numeric|min:0'
             ]);
 
             $variant->update($validatedData);
@@ -157,7 +132,6 @@ class ProductVariantController extends Controller
                 'message' => 'Varian produk berhasil diupdate !!!',
                 'data' => $variant
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal memperbarui varian produk !!!',
@@ -172,19 +146,12 @@ class ProductVariantController extends Controller
     public function destroy(string $id)
     {
         try {
-            $variant = ProductVariant::findOrfail($id);
-
-            if(!$variant) {
-                return response()->json([
-                    'message' => 'Varian produk tidak ada !!!'
-                ], 404);
-            }
+            $variant = ProductVariant::findOrFail($id);
 
             $variant->delete();
             return response()->json([
                 'message' => 'Varian produk berhasil dihapus !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menghapus varian produk !!!',
@@ -192,5 +159,4 @@ class ProductVariantController extends Controller
             ], 500);
         }
     }
-
 }

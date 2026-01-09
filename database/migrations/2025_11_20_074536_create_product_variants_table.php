@@ -9,15 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    /**
+     * Run the migrations.
+     * Menciptakan tabel 'product_variants' dan relasi ke 'products'.
+     */
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_category_id')->constrained()->onDelete('restrict');
-            $table->foreignId('product_id')->constrained()->onDelete('restrict');
-            $table->string('name')->unique();
-            $table->decimal('price', 10, 2);
-            $table->integer('stock')->default(0);
+            $table->unsignedBigInteger('product_id'); // Kunci asing ke Produk
+            $table->string('nama');
+            $table->integer('stok')->default(0);
+            $table->decimal('tambahan_harga', 10, 2)->nullable();
+
+            // Relasi: Jika Produk dihapus, Varian ikut dihapus
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

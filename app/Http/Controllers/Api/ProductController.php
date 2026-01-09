@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         try {
-            $product = Product::with(['categories', 'variants'])->get();
+            $product = Product::with(['category', 'variant'])->get();
 
             return response()->json([
                 'message' => 'Produk berhasil ditampilkan !!!',
@@ -38,11 +38,10 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Route create siap digunakan !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi Kesalahan pada create: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -55,8 +54,9 @@ class ProductController extends Controller
         try {
             $validatedData = $request->validate([
                 'product_category_id' => 'required|exists:product_categories,id',
-                'name' => 'required|string|max:255',
-                'description' => 'required|string'
+                'nama' => 'required|string|max:255',
+                'harga' => 'required|numeric|min:0',
+                'deskripsi' => 'nullable|string'
             ]);
 
             $product = Product::create($validatedData);
@@ -64,7 +64,6 @@ class ProductController extends Controller
                 'message' => 'Produk berhasil ditambahkan !!!',
                 'data' => $product
             ], 201);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menambahkan produk !!!',
@@ -79,13 +78,12 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = Product::with(['categories', 'variants'])->findOrFail($id);
-            
+            $product = Product::with(['category', 'variant'])->findOrFail($id);
+
             return response()->json([
                 'message' => 'Produk pilihan berhasil ditampilkan !!!',
                 'data' => $product
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menampilkan produk !!!',
@@ -106,11 +104,10 @@ class ProductController extends Controller
                 'message' => 'Route edit siap digunakan !!!',
                 'data' => $product
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan pada edit: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -125,8 +122,9 @@ class ProductController extends Controller
 
             $validatedData = $request->validate([
                 'product_category_id' => 'exists:product_categories,id',
-                'name' => 'string|max:255',
-                'description' => 'string'
+                'nama' => 'string|max:255',
+                'harga' => 'numeric|min:0',
+                'deskripsi' => 'nullable|string'
             ]);
 
             $product->update($validatedData);
@@ -134,7 +132,6 @@ class ProductController extends Controller
                 'message' => 'Produk berhasil diupdate !!!',
                 'data' => $product
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal memperbarui produk !!!',
@@ -155,7 +152,6 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Produk berhasil dihapus !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'gagal menghapus produk !!!',

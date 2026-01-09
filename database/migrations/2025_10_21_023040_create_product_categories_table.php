@@ -9,12 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    /**
+     * Run the migrations.
+     * Menciptakan tabel 'product_categories'.
+     */
     public function up(): void
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('nama')->unique(); // Nama kategori harus unik
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

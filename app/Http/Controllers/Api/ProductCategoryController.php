@@ -15,13 +15,12 @@ class ProductCategoryController extends Controller
     public function index()
     {
         try {
-            $category = ProductCategory::with('products.variants')->get();
+            $category = ProductCategory::with('product.variant')->get();
 
             return response()->json([
                 'message' => 'Kategori produk berhasil ditampilkan !!!',
-                'data'=> $category
+                'data' => $category
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menampilkan kategori produk !!!',
@@ -39,11 +38,10 @@ class ProductCategoryController extends Controller
             return response()->json([
                 'message' => 'Route Create Siap Digunakan !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi Kesalahan pada create: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -55,8 +53,8 @@ class ProductCategoryController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string'
+                'nama' => 'required|string|max:255|unique:product_categories,nama',
+                'deskripsi' => 'nullable|string'
             ]);
 
             $category = ProductCategory::create($validatedData);
@@ -64,7 +62,6 @@ class ProductCategoryController extends Controller
                 'message' => 'Kategori produk berhasil ditambahkan !!!',
                 'data' => $category
             ], 201);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menambahkan kategori produk !!!',
@@ -79,13 +76,12 @@ class ProductCategoryController extends Controller
     public function show(string $id)
     {
         try {
-            $category = ProductCategory::with('products.variants')->findOrFail($id);
+            $category = ProductCategory::with('product.variant')->findOrFail($id);
 
             return response()->json([
                 'message' => 'Kategori produk pilihan berhasil ditampilkan !!!',
                 'data' => $category
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menampilkan kategori produk !!!',
@@ -106,11 +102,10 @@ class ProductCategoryController extends Controller
                 'message' => 'Route edit siap digunakan !!!',
                 'data' => $category
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan pada edit: '
-                . $e->getMessage()
+                    . $e->getMessage()
             ], 500);
         }
     }
@@ -124,16 +119,15 @@ class ProductCategoryController extends Controller
             $category = ProductCategory::findOrFail($id);
 
             $validatedData = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'description' => 'nullable|string'
+                'nama' => 'nullable|string|max:255|unique:product_categories,nama,' . $id,
+                'deskripsi' => 'nullable|string'
             ]);
 
             $category->update($validatedData);
             return response()->json([
                 'message' => 'Kategori produk berhasil diupdate !!!',
                 'data' => $category
-        ], 200);
-
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal memperbarui kategori produk !!!',
@@ -154,7 +148,6 @@ class ProductCategoryController extends Controller
             return response()->json([
                 'message' => 'Kategori produk berhasil dihapus !!!'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Gagal menghapus kategori produk !!!',

@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
-    protected $fillable = ['name', 'description'];
+    protected $fillable = [
+        'nama',
+        'deskripsi',
+    ];
 
-    public function products()
+    /**
+     * Mendefinisikan relasi One-to-Many ke Product.
+     * Satu ProductCategory memiliki banyak Products.
+     */
+    public function product()
     {
         return $this->hasMany(Product::class, 'product_category_id');
-    }
-
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class, 'product_category_id');
     }
 }

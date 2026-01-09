@@ -6,15 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
 {
-    protected $fillable = ['product_category_id', 'product_id', 'name', 'price', 'stock'];
+    protected $fillable = [
+        'product_id',
+        'nama',
+        'stok',
+        'tambahan_harga',
+    ];
 
-    public function products()
+    /**
+     * Mendefinisikan relasi BelongsTo ke Product.
+     * Satu ProductVariant dimiliki oleh satu Product.
+     */
+    public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
-    }
-
-    public function categories()
-    {
-        return $this->belongsTo(ProductCategory::class, 'product_category_id');
     }
 }
